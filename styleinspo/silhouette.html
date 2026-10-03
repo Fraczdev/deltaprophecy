@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+
+
+<!-- Mirrored from deltaprophecy.vercel.app/silhouette.html by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 02 Oct 2026 21:01:30 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=utf-8" /><!-- /Added by HTTrack -->
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>DELTAPROPHECY | SILHOUETTE TOOL</title>
+    <link rel="icon" type="image/png" href="assets/favicond41d.html?">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="tools.css">
+</head>
+
+<body>
+    <div class="centeralign" style="margin-top: 40px;">
+        <p style="margin-bottom: 0px;">DELTAPROPHECY</p>
+    </div>
+    <h1 style="margin-top: 10px;">SILHOUETTE TOOL</h1>
+
+    <input type="file" id="fileInput" accept="image/*" />
+    <label for="fileInput" class="custom-file-upload">Upload Image</label>
+
+    <canvas id="preview"></canvas>
+
+    <div id="thresholdContainer">
+        <label for="threshold">Threshold:</label>
+        <input type="range" id="threshold" min="0" max="255" value="127" />
+        <span id="thresholdValue">127</span>
+    </div>
+
+    <div id="invertContainer">
+        <label for="invertToggle">Invert Colors:</label>
+        <label class="switch">
+            <input type="checkbox" id="invertToggle" />
+            <span class="slider"></span>
+        </label>
+    </div>
+
+    <button id="exportButton">Export Silhouette</button>
+
+    <div class="centeralign">
+        <hr>
+
+        <h1>INSTRUCTIONS</h1>
+
+        <p>
+            Adjust the threshold slider to change how dark/light the monochrome image is, and toggle invert colors on or
+            off to change what part is used. (In case your image is darker than the background or something)
+            <br>
+            Once you're done, you can export it using the export button. Shocker.
+        </p>
+
+        <hr>
+
+        <footer>
+            <p>made by willow :3</p>
+            <p>
+                <a href="https://twitter.com/deItaprophecy" target="_blank">my twitter</a>
+                <small>■</small>
+                <a href="https://deltaprophecy.tumblr.com/" target="_blank">my tumblr</a>
+                <small>■</small>
+                <a href="https://www.reddit.com/user/deltaprophecy-legit/" target="_blank">my reddit</a>
+            </p>
+            <p>DELTARUNE © Toby Fox 2018-2026. All rights reserved. </p>
+        </footer>
+    </div>
+
+    <script>
+        const fileInput = document.getElementById('fileInput');
+        const canvas = document.getElementById('preview');
+        const ctx = canvas.getContext('2d');
+        const thresholdSlider = document.getElementById('threshold');
+        const thresholdValue = document.getElementById('thresholdValue');
+        const exportButton = document.getElementById('exportButton');
+        const invertToggle = document.getElementById('invertToggle');
+
+        let originalImage = null;
+
+        function applyThreshold(threshold) {
+            if (!originalImage) return;
+
+            const width = canvas.width;
+            const height = canvas.height;
+
+            ctx.clearRect(0, 0, width, height);
+            ctx.drawImage(originalImage, 0, 0);
+
+            const imageData = ctx.getImageData(0, 0, width, height);
+            const data = imageData.data;
+            const invert = invertToggle.checked;
+
+            for (let i = 0; i < data.length; i += 4) {
+                const r = data[i], g = data[i + 1], b = data[i + 2];
+                const brightness = (r + g + b) / 3;
+                let isLight = brightness > threshold;
+
+                if (invert) isLight = !isLight;
+
+                if (isLight) {
+                    data[i] = data[i + 1] = data[i + 2] = 255;
+                    data[i + 3] = 255;
+                } else {
+                    data[i + 3] = 0;
+                }
+            }
+
+            ctx.putImageData(imageData, 0, 0);
+        }
+
+        fileInput.addEventListener('change', function () {
+            const file = fileInput.files[0];
+            if (!file) return;
+
+            const img = new Image();
+            img.onload = function () {
+                canvas.width = img.width;
+                canvas.height = img.height;
+
+                originalImage = document.createElement('canvas');
+                originalImage.width = img.width;
+                originalImage.height = img.height;
+
+                const tempCtx = originalImage.getContext('2d');
+                tempCtx.drawImage(img, 0, 0);
+
+                applyThreshold(parseInt(thresholdSlider.value));
+            };
+
+            const reader = new FileReader();
+            reader.onload = e => img.src = e.target.result;
+            reader.readAsDataURL(file);
+        });
+
+        thresholdSlider.addEventListener('input', () => {
+            const value = parseInt(thresholdSlider.value);
+            thresholdValue.textContent = value;
+            applyThreshold(value);
+        });
+
+        invertToggle.addEventListener('change', () => {
+            applyThreshold(parseInt(thresholdSlider.value));
+        });
+
+        exportButton.addEventListener('click', () => {
+            const link = document.createElement('a');
+            link.download = 'dp-silhouette.html';
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        });
+    </script>
+</body>
+
+
+<!-- Mirrored from deltaprophecy.vercel.app/silhouette.html by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 02 Oct 2026 21:01:30 GMT -->
+</html>

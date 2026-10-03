@@ -1,0 +1,146 @@
+DELTAPROPHECY STANDALONE EDITOR TESTS
+=====================================
+
+Static checks
+-------------
+- Run node tests/static-checks.mjs.
+- Confirm index-noredirect.html exists.
+- Confirm all referenced local fonts, textures, favicon, GIF worker, and
+  license resource exist.
+- Confirm gif.js is not loaded more than once.
+- Confirm the renderer and export entry points are present.
+
+Text and injection
+------------------
+- Enter ordinary text and confirm preview rendering.
+- Enter markup such as <img src=x onerror=alert(1)> and confirm it displays
+  literally.
+- Enter one newline, multiple newlines, and trailing newlines.
+- Confirm no unexpected HTML nodes are created from text input.
+
+Uploads
+-------
+- Upload a valid supported image.
+- Upload an unsupported file type.
+- Upload an oversized file.
+- Upload an image with excessive dimensions.
+- Simulate image decode failure.
+- Replace an existing upload and confirm the previous preview is released.
+
+Rendering
+---------
+- Test each panel preset.
+- Test style/theme changes.
+- Test text, panel, and background texture uploads.
+- Test font upload.
+- Confirm preview animation continues without changing intended cadence.
+- Confirm canvas output remains pixelated/crisp as designed.
+
+Opaque-pixel compositing
+------------------------
+- Test a black opaque image and confirm its shape is rendered.
+- Test a colored opaque image and confirm its shape is rendered.
+- Test a partially transparent image and confirm alpha is preserved.
+- Confirm fully transparent pixels remain absent.
+- Enable Invert Mask and confirm the previously transparent areas become
+  textured while the uploaded image's opaque areas become transparent.
+- Disable Invert Mask and confirm the original alpha-mask rendering returns.
+- Upload a tall and a wide non-square image. Confirm the panel texture has the
+  same fitted height as each image, with no blank texture space above or below.
+ - Change Panel Texture Width and confirm only the texture tile width changes.
+ - Confirm Custom Panel Texture Height is unchecked by default and the texture
+   height follows the fitted image height.
+ - Check Custom Panel Texture Height, change its pixel value, and confirm the
+   texture height changes without changing the uploaded image or alpha mask.
+ - Set texture width smaller than the uploaded image and confirm the texture
+   stops at its centered configured width while the image mask remains unchanged.
+ - Change texture width and height and confirm the source pattern scale stays
+   unchanged; only the tiled fill area changes.
+ - Increase Panel Texture Width beyond the uploaded image width and confirm
+   texture becomes visible outside the image silhouette without stretching.
+ - Confirm the imported image remains visible when texture width is smaller
+   than the image and when custom texture height is enabled.
+ - Increase texture width and height beyond the input image and confirm the
+   stable masked result remains visible; overflow rendering is deferred.
+ - Confirm texture width and custom height directly control the configured
+   texture rectangle while the uploaded image remains correctly masked.
+ - Confirm the warning explains that invisible bottom space supports vertical
+   texture extension and invisible side space supports horizontal extension.
+ - Confirm the stable masked texture animation remains unchanged after
+    reverting overflow experiments.
+
+GIF export
+----------
+- Confirm export is disabled before a valid render exists.
+- Export a normal preview and verify a .gif download.
+- Confirm normal export downloads as `output.gif`.
+- Trigger Experimental Optimized GIF and confirm it completes with the same
+  visual duration while capturing fewer frames.
+- Confirm transparent pixels outside the rendered panel/background remain
+  transparent in the exported GIF instead of becoming black.
+- Enable Export with black background and confirm the exported GIF uses a
+  solid black background and does not use transparency.
+- Confirm progress/status changes are visible.
+- Trigger an encoder error and confirm controls recover.
+- Trigger timeout/cancel cleanup and confirm a later export can run.
+- Confirm frame delay and frame count remain the intended values unless an
+  explicit compatibility fix changes them.
+
+Accessibility/responsive
+------------------------
+- Navigate all controls using keyboard only.
+- Confirm every input has a usable label.
+- Confirm status/error text is announced through aria-live.
+- Test a narrow mobile viewport.
+- Confirm no required control or output is clipped.
+- Test reduced-motion behavior where supported.
+
+External-resource behavior
+--------------------------
+- Confirm no YouTube iframe or autoplay media is loaded.
+- Confirm the footer contains only the requested Toby Fox copyright notice.
+- Confirm instructions do not warn users that images must be black and white
+  or link to the obsolete monochrome conversion flow.
+- Select The Girl style and confirm it uses the final assets, brighter red
+  panel layers, red text, and no background texture.
+- Select Default and Susie's Dark World and confirm no red overlay appears at
+  any pulse interval in preview or exported GIF capture.
+- Confirm The Girl uses the original blue prophecy texture, brightens it,
+  and moves its diagonal afterframes faster and farther than other styles.
+- Select The Final Prophecy and confirm its original two-second transition and
+  original blue panel treatment remain unchanged.
+- Select The Girl and confirm its panel transition takes approximately six
+  seconds and its brighter red treatment is retained.
+- Confirm The Girl's pale pattern areas are strongly lifted toward white while
+  Final Prophecy remains unchanged.
+- Open Advanced Settings and change GIF width and height; confirm the labeled
+  border updates and the export configuration uses the selected dimensions.
+- Confirm the GIF border remains inside its dedicated preview frame and does
+  not overlap the text controls, canvas surroundings, or instructions at wide
+  and narrow dimensions.
+- Confirm the default GIF size is 450×300 and changing resolution updates the
+  label while the dedicated 450×300 preview frame remains stable.
+- Move the panel through its available vertical offsets and confirm the actual
+  canvas content stays inside the padded frame, with text remaining visible
+  above it and no dark clipping overlay.
+- Confirm the background texture is centered on the panel rather than starting
+  above it, and changing GIF Panel Y Offset moves the exported panel and its
+  background together.
+- Press Check Rendering Alignment and confirm it reports success after changing
+  styles, image scale, image offset, and GIF dimensions.
+- Compare the browser preview with an exported GIF using the same text, image
+  scale, image offset, and GIF Panel Y Offset. Confirm text remains at the top
+  origin while the panel, ghosts, and background move together.
+- Adjust Background Texture Scale across its range. Confirm only the tiled
+  background changes size and that the exported GIF matches the preview.
+- Confirm the prophecy text is inside the same 450×300 boundary as the panel
+  and that the border encloses both the text and rendered panel.
+- Test a large transparent PNG with a non-square aspect ratio and confirm its
+  proportions remain intact instead of becoming a filled rectangle.
+- Confirm editor startup does not depend on the license redirect.
+- Confirm missing optional external resources produce local diagnostics.
+
+Regression
+----------
+- Run the static check after every iteration.
+- Run the complete checklist after all BUGS.TXT items are addressed.

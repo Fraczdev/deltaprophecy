@@ -1,0 +1,128 @@
+input[type="file"] {
+    display: none;
+}
+
+.custom-file-upload,
+#exportButton {
+    border: 2px solid yellow;
+    padding: 10px;
+    font-size: 18px;
+    margin-left: auto;
+    margin-right: auto;
+    color: yellow;
+    background-color: black;
+    font-family: "8BitOperatorPlus-Regular", sans-serif;
+    font-weight: bold;
+    font-variant-emoji: text;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    cursor: pointer;
+}
+
+#thresholdContainer,
+#invertContainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+input[type="range"] {
+    appearance: none;
+    width: 150px;
+    height: 15px;
+    background: black;
+    cursor: pointer;
+    border-radius: 0px;
+    padding: 5px;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+    appearance: none;
+    width: 15px;
+    height: 15px;
+    background: white;
+    border: none;
+    border-radius: 0%;
+}
+
+input[type="range"]::-moz-range-thumb {
+    width: 15px;
+    height: 15px;
+    background: white;
+    border: none;
+    border-radius: 0%;
+}
+
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 30px;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #000;
+    border-radius: 0px;
+    transition: 0.4s;
+    border: 2px solid white;
+    box-sizing: border-box;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 16px;
+    width: 16px;
+    top: 50%;
+    left: 5px;
+    transform: translateY(-50%);
+    background-color: white;
+    border-radius: 0%;
+    transition: 0.4s;
+    box-sizing: border-box;
+    border: none;
+}
+
+input:checked+.slider {
+    background-color: yellow;
+    border-color: #000;
+}
+
+input:checked+.slider:before {
+    background-color: black;
+    transform: translate(20px, -50%);
+}
+
+canvas {
+    background-image:
+        linear-gradient(45deg, #444 25%, transparent 25%),
+        linear-gradient(-45deg, #444 25%, transparent 25%),
+        linear-gradient(45deg, transparent 75%, #444 75%),
+        linear-gradient(-45deg, transparent 75%, #444 75%);
+    background-size: 16px 16px;
+    background-position: 0 0, 0 8px, 8px -8px, -8px 0;
+    background-color: #222;
+    image-rendering: crisp-edges;
+}
+
+#info {
+    max-width: 512px;
+    text-align: center;
+    font-size: 14px;
+    margin-top: 10px;
+    color: #fff;
+}

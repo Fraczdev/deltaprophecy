@@ -1,0 +1,244 @@
+DELTAPROPHECY STANDALONE EDITOR BUGS AND SOLUTIONS
+===================================================
+
+Scope
+-----
+Only index-noredirect.html and its local assets are in scope. Do not use the
+deleted deltaprophecy.vercel.app snapshot as an implementation dependency.
+
+1. DONE - User text is inserted with innerHTML
+Solution: use textContent/text nodes while preserving renderer line breaks.
+Acceptance: markup typed as text is displayed literally and never executes.
+
+2. DONE - Text input is single-line
+Solution: use a textarea and preserve multiple newline separators.
+Acceptance: one, two, and several consecutive blank lines render correctly.
+
+3. DONE - Duplicate external gif.js loads
+Solution: vendor one exact compatible copy locally.
+Acceptance: GIF export works with one encoder script request.
+
+4. DONE - Upload type, size, and dimensions are not bounded
+Solution: reject unsupported/oversized files before expensive processing and
+report the rejection in the page.
+Acceptance: valid images work; oversized, malformed, and excessive-dimension
+files are rejected without an uncaught exception.
+
+5. DONE - Upload object URLs can leak
+Solution: track and revoke URLs after decode and when replacing an upload.
+Acceptance: repeated uploads do not retain old object URLs.
+
+6. DONE - Export lifecycle retains large resources
+Solution: preserve current timing, but reset state on success/failure/timeout,
+release frame references, and report status without relying only on alerts.
+Acceptance: export success, failure, and timeout all restore the UI.
+
+7. DONE - Export can run before a valid preview
+Solution: disable export until required image/render state is ready.
+Acceptance: an initial export click does nothing; valid input enables export.
+
+8. DONE - License failure redirects externally
+Solution: replace redirect behavior with local visible diagnostics; document
+that client-side checks are not security.
+Acceptance: missing license assets do not navigate away from the editor.
+
+9. DONE - Autoplaying YouTube adds optional startup cost
+Solution: make the video user-started and remove autoplay permission.
+Acceptance: initial editor load makes no autoplay media request.
+
+10. DONE - Controls/status lack complete accessibility feedback
+Solution: label controls, add field grouping and aria-live status, and support
+keyboard use on narrow layouts.
+Acceptance: keyboard and narrow viewport checks reveal no clipped or silent
+required controls.
+
+11. DONE - Large upload paths retain redundant copies
+Solution: release obsolete Image, canvas, and data-URL references while keeping
+the existing pixel output.
+Acceptance: replacing a large upload releases the previous source state.
+
+12. DONE - No standalone-editor regression check
+Solution: maintain tests/static-checks.mjs for local resources, renderer
+contracts, and unsafe patterns.
+Acceptance: the static check passes before browser regression testing.
+
+13. DONE - Compositor only accepts bright silhouettes
+Solution: use source alpha as the mask and preserve it when applying the
+texture; do not gate pixels by brightness.
+Acceptance: black, colored, opaque, and translucent source pixels appear in
+the textured result.
+
+14. DONE - Redundant autoplay media and credits
+Solution: remove the YouTube iframe and retain only the requested DELTARUNE
+copyright line.
+Acceptance: no YouTube iframe or autoplay request exists.
+
+15. DONE - Legacy visual shell is visually dated
+Solution: align the shell with the styleinspo reference using a compact black
+layout, square borders, yellow action controls, responsive wrapping, and
+clear focus/status styling without removing advanced controls.
+Acceptance: controls remain keyboard reachable and the narrow layout wraps
+without clipping.
+
+16. DONE - Obsolete monochrome warning remains after alpha compositing
+Solution: remove the black-and-white warning and monochrome conversion link
+from the editor instructions.
+Acceptance: instructions describe general image uploads without implying a
+brightness or color restriction.
+
+17. DONE - Missing The Girl style variant
+Solution: add a Girl style based on the final assets, hide both background
+texture layers, brighten the red panel layers, and use a brighter red text
+gradient without the blue transition.
+Acceptance: The Girl option stays red, is brighter, has no surrounding
+background texture, and retains final-style animation behavior.
+
+18. DONE - The Girl text and afterframes use the wrong treatment
+Solution: use the original blue prophecy texture with a lighter blue gradient
+and brightness filter, while increasing Girl-only diagonal afterframe speed
+and offset amplitude.
+Acceptance: panel and text treatments remain independent; Girl text is light
+blue and diagonal afterframes are visibly faster and wider.
+
+19. DONE - The Girl panel transition is too short and its red treatment needs
+more warmth
+Solution: preserve The Final Prophecy's original timing and panel colors,
+while extending The Girl's transition to six seconds and applying a subtle
+warm hue/saturation adjustment only to Girl layers.
+Acceptance: The Final Prophecy is unchanged; The Girl has the slower,
+brighter, warmer panel treatment.
+
+20. DONE - The Girl white overlay is not bright enough
+Solution: increase the Girl-only panel brightness filter to 4x while retaining
+its warm red hue adjustment.
+Acceptance: pale Girl pattern areas are lifted strongly toward white without
+changing Final Prophecy or the text treatment.
+
+21. DONE - GIF dimensions are fixed and not visible
+Solution: add bounded width and height controls, connect them to gif.js and
+resize captured frames to those dimensions, and show a labeled preview border.
+Acceptance: changing either value updates the border label/aspect ratio and
+the exported GIF uses the selected dimensions.
+
+22. DONE - GIF border can overlap surrounding page content
+Solution: place the preview and boundary inside a dedicated aspect-ratio
+container with padding and hidden overflow, updating that container whenever
+GIF dimensions change.
+Acceptance: the border and preview remain inside their own spaced frame at
+all supported dimensions and viewport widths.
+
+23. DONE - Preview border changes size with export resolution
+Solution: use a dedicated fixed 450×300 display frame, matching the
+styleinspo canvas-wrapper pattern. Export dimensions remain configurable and
+are shown in the label without resizing the display frame.
+Acceptance: changing resolution never shrinks or moves the border into other
+elements, and the default controls and label show 450×300.
+
+24. DONE - Rendered canvases are offset above the GIF frame
+Solution: follow the styleinspo wrapper model: keep the wrapper responsible
+for containment and place borderless canvases inside its padded inset. Remove
+the legacy -50px canvas offsets that caused the actual rendered panel to sit
+above the visible yellow boundary and clip when moved vertically.
+Acceptance: panel, overlays, and text stay aligned with the frame and remain
+visible throughout the supported vertical offset range.
+
+25. DONE - Background origin and GIF export offset drifted from panel
+Solution: restore the renderer's native 2:1 canvas coordinate space inside
+the padded frame, center the background mask at the panel center, and apply
+the GIF Y offset to background and panel layers together during capture.
+Acceptance: background texture is centered behind the panel and GIF Panel Y
+Offset visibly moves the complete exported composition.
+
+26. DONE - Rendering geometry is duplicated across old coordinate systems
+Solution: standardize preview and capture on a 450×300 composition space and
+add a Check Rendering Alignment control that validates canvas dimensions,
+wrapper containment, and aspect ratio.
+Acceptance: the check reports success after changing renderer settings.
+
+27. DONE - Large non-square uploads lose their intended proportions
+Solution: use the unified composition geometry and preserve the existing
+aspect-ratio fit calculation when mapping uploads into the panel mask.
+Acceptance: large transparent non-square images render with their shape and
+proportions preserved.
+
+28. DONE - Text was outside the GIF composition boundary
+Solution: move both text layers into the same bounded preview frame as the
+canvas stack, position them at the same 20px origin used by GIF capture, and
+make the border cover the complete composition.
+Acceptance: the visible border encloses text, panel, overlays, and background
+using the same 450×300 coordinate space.
+
+29. DONE - Browser preview and GIF capture used different layer positions
+Solution: remove the GIF-only canvas translation and animation-derived offset.
+The capture path now draws the already-rendered background and panel canvases at
+their native (0, 0) origin, matching the browser composition. GIF Panel Y
+Offset is applied while generating the shared preview canvases instead.
+Acceptance: panel, ghosts, background, and text have the same relative
+positions in the browser preview and exported GIF.
+
+30. DONE - Background texture scale was coupled to image scale
+Solution: add a dedicated Background Texture Scale control and use it only for
+background tile sizing and movement. Panel image scale remains independent.
+Acceptance: changing background scale changes only the background texture size
+and produces the same result in preview and GIF capture.
+
+31. DONE - There was no way to invert the uploaded mask
+Solution: add an Invert Mask control that complements every fitted source alpha
+value before texture compositing. Normal behavior remains alpha-aware; when
+enabled, transparent areas become textured and opaque areas become transparent.
+Acceptance: toggling the control redraws both preview and GIF source canvases
+with the complementary alpha mask.
+
+32. DONE - Panel texture dimensions were being confused with image dimensions
+Solution: render the texture inside its own centered rectangle. Width always
+uses the configured texture pixel width and is no longer constrained by the
+uploaded image width. Height defaults to the fitted uploaded-image height and
+only uses the configured pixel height when Custom Panel Texture Height is
+checked. The uploaded image remains only the alpha mask.
+Acceptance: changing texture width changes the bounded texture area only;
+unchecked height follows the image height; checked height uses the custom
+texture value; the uploaded image geometry does not change.
+
+33. DONE - Texture dimension controls stretched the source pattern
+Solution: replace rectangle stretching with native-size tiled filling. The
+source texture is drawn at its intrinsic dimensions repeatedly inside the
+configured texture rectangle, which is clipped before alpha masking.
+Acceptance: changing texture width or height changes the filled area without
+changing the texture pattern scale or stretching the uploaded image.
+
+34. DONE - Red overlay appeared at intervals in the default style
+Solution: explicitly skip every red layer during GIF capture unless Final
+Prophecy or The Girl is active, and force red text opacity to zero outside the
+final theme. This prevents CSS pulse state from leaking into the default
+composition.
+Acceptance: Default and Susie's Dark World never show red panel, ghost,
+background, or text overlays.
+
+35. DONE - Panel texture width was visually capped by the image silhouette
+Solution: composite the uploaded-image alpha and rendered texture alpha as a
+union instead of using the image alpha as a hard clip. The image silhouette
+continues to render, while texture inside its independent rectangle can extend
+beyond that silhouette.
+Acceptance: increasing Panel Texture Width visibly adds texture outside the
+uploaded image without stretching the image or texture pattern.
+
+36. DEFERRED - Texture overflow remains incompatible with the stable mask path
+The resolution-first texture-surface experiment was reverted. The renderer
+currently uses the first approach: draw the source texture into its configured
+rectangle, then apply the uploaded image alpha as the sole output mask. This
+keeps imported images reliable, but texture outside the image silhouette is
+intentionally clipped.
+Future overflow support requires a separate visible panel layer or a distinct
+overflow mask; a larger texture rectangle alone cannot bypass the image alpha.
+
+37. DONE - Texture overflow needed a separate visual layer
+Solution attempted: add normal and red texture-overflow canvases below the
+masked panel layers. This was reverted because the duplicate layer did not
+preserve the original texture animation coordinate space and produced severe
+resolution/scaling errors.
+Future implementation must share the exact native texture tiling and panel
+coordinate transform rather than drawing a separately resized preview layer.
+
+Completion rule
+---------------
+Mark an item complete only after its acceptance test and TESTS.TXT pass.

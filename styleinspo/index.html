@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+
+
+<!-- Mirrored from deltaprophecy.vercel.app/ by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 02 Oct 2026 21:01:16 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=utf-8" /><!-- /Added by HTTrack -->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DELTAPROPHECY</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <!-- originally 640 before vw conversion, 44.44vw new -->
+    <img src="images/header.png" alt="UNDERTALE DELTARUNE SUMMER 2026 NEWSLETTER" class="email-header image-full" style="width: 640px;">
+
+    <!-- 30px og, 2.08vw new -->
+    <div class="flexrow" style="margin-bottom: 30px;">
+        <p>Release v4.0.3</p>
+    </div>
+
+    <div id="iframeBorder">
+        <iframe id="game" src="main/index.html"></iframe>
+    </div>
+
+    <h1>OPTIONS</h1>
+
+    <div class="flexrow">
+        <label for="txt">Panel Text:</label>
+        <input type="text" class="txt" id="txt" value="PROPHECY TEXT#GOES HERE."
+            oninput="apparentlyWeCantHaveMoreThanTwoLinesButWtv(this)">
+    </div>
+
+    <div class="flexrow">
+        <label for="yoff">Text Y Offset:</label>
+        <input type="number" class="yoff" min="-200" max="200" step="2" id="yoff" value="0">
+    </div>
+
+    <button id="upload">UPLOAD PANEL IMAGE</button>
+
+    <div class="flexrow stupidselect">
+        <label for="style">Style:</label>
+        <select id="style">
+            <option value="1">Normal</option>
+            <option value="2">Second Sanctuary</option>
+            <option value="3">Final Prophecy</option>
+            <option value="4">The Girl</option>
+        </select>
+    </div>
+
+    <div class="flexrow">
+        <label for="gifwidth">GIF Width:</label>
+        <input type="number" class="gifwidth" min="0" max="640" step="4" id="gifwidth" value="450">
+
+        <label for="gifheight">GIF Height:</label>
+        <input type="number" class="gifheight" min="0" max="480" step="4" id="gifheight" value="300">
+
+        <label for="gifyoff">GIF Y Offset:</label>
+        <input type="number" class="gifyoff" min="-240" max="240" step="4" id="gifyoff" value="0">
+    </div>
+
+    <button id="download">EXPORT GIF</button>
+
+    <!-- 30px og, 2.08vw new -->
+    <div class="centeralign" style="margin-top: 30px;">
+        <hr>
+
+        <h1>INSTRUCTIONS</h1>
+
+        <p>Upload a silhouette image. NOT black and white this time! All opaque pixels are processed the same. Anything
+            from the old tool will just be a plain old rectangle.</p>
+
+        <p>Type your panel text in the text box. You can use "#" to move to a new line. Due to me sucking at coding and
+            GameMaker's surface limits, you can only have one newline.</p>
+
+        <p>You can also change the style. I guess I should've mentioned that in the original</p>
+
+        <hr>
+
+        <h1 id="faq">FAQ</h1>
+
+        <p class="yellow">
+            <strong class="font-8bit-bold">Q:</strong>
+            How can I make my image into a silhouette?
+            <small></small>
+        </p>
+
+        <p>
+            <strong class="font-8bit-bold">A:</strong>
+            you can do so using <a href="silhouette.html" target="_blank">this tool</a>
+            <small></small>
+        </p>
+
+        <p class="yellow">
+            <strong class="font-8bit-bold">Q:</strong>
+            My image isn't importing/crashed the program on import.
+            <small></small>
+        </p>
+
+        <p>
+            <strong class="font-8bit-bold">A:</strong>
+            your image is likely WAYYYYYY too big for gamemaker to handle. try running it through <a
+                href="safe-downscale-thing.html" target="_blank">this tool</a>. why did i make so many tools for this
+            <small></small>
+        </p>
+
+        <p class="yellow">
+            <strong class="font-8bit-bold">Q:</strong>
+            I found a bug/crash/issue/whatever.
+            <small></small>
+        </p>
+
+        <p>
+            <strong class="font-8bit-bold">A:</strong>
+            no you didn't.
+            <small></small>
+        </p>
+
+        <p>
+            ...
+            <small></small>
+        </p>
+
+        <p>
+            jokes aside, please report it <a href="https://forms.gle/XZ68svXyr7ycotia9" target="_blank">here</a> and
+            i'll try my best to fix it. key word "try"
+            <small></small>
+        </p>
+
+        <p class="yellow">
+            <strong class="font-8bit-bold">Q:</strong>
+            Can I use this to make panels for my fan project/comic/game/whatever?
+            <small></small>
+        </p>
+
+        <p>
+            <strong class="font-8bit-bold">A:</strong>
+            totally!! just be sure to credit and provide a link to this page
+            <small></small>
+        </p>
+
+        <p class="yellow">
+            <strong class="font-8bit-bold">Q:</strong>
+            Will we ever get custom styles/textures/fonts like in the old version?
+            <small></small>
+        </p>
+
+        <p>
+            <strong class="font-8bit-bold">A:</strong>
+            ...nobody every used those so i took them out. if enough people really really want them i could try
+            though
+            <small></small>
+        </p>
+
+        <p class="yellow">
+            <strong class="font-8bit-bold">Q:</strong>
+            I found a clone/fake site! What can I do? How should I report it?
+            <small></small>
+        </p>
+
+        <p>
+            <strong class="font-8bit-bold">A:</strong>
+            so here's the thing. i've tried so many damn times to get all those stupid scam clones taken down and google
+            hates me so it never happens. i don't actually have any legal leverage here, so for now just like ignore
+            them and maybe google will take them down or something
+            <small></small>
+        </p>
+
+        <p class="yellow">
+            <strong class="font-8bit-bold">Q:</strong>
+            What's the new "The Girl" style from?
+            <small></small>
+        </p>
+
+        <p>
+            <strong class="font-8bit-bold">A:</strong>
+            <a href="https://www.youtube.com/watch?v=eA-RBpfcGgQ&amp;t=9160s" target="_blank">this</a>
+            <small></small>
+        </p>
+
+        <p class="yellow">
+            <strong class="font-8bit-bold">Q:</strong>
+            Can I still access the old version?
+            <small></small>
+        </p>
+
+        <p>
+            <strong class="font-8bit-bold">A:</strong>
+            yknow what sure you sicko. <a href="legacy/index.html" target="_blank">here</a>. just know that i'm never
+            updating that so if there's a bug it's effectively just a feature atp
+            <small></small>
+        </p>
+
+        <p class="yellow">
+            <strong class="font-8bit-bold">Q:</strong>
+            Are any of these questions real?
+            <small></small>
+        </p>
+
+        <p>
+            <strong class="font-8bit-bold">A:</strong>
+            that's classified information
+            <small></small>
+        </p>
+
+        <p class="yellow">
+            <strong class="font-8bit-bold">Q:</strong>
+            The gifs don't loop properly! There's a hard cut!
+            <small></small>
+        </p>
+
+        <p>
+            <strong class="font-8bit-bold">A:</strong>
+            do you want the gifs to be 150mb?<br>didn't think so.
+            <small></small>
+        </p>
+
+        <p class="yellow">
+            <strong class="font-8bit-bold">Q:</strong>
+            Apostrophes don't work!
+            <small></small>
+        </p>
+
+        <p>
+            <strong class="font-8bit-bold">A:</strong>
+            please make sure you're using 
+            <small>"</small>
+            <strong class="yellow">'</strong>
+            <small>"</small>
+             and not 
+            <small>"</small>
+            <strong class="yellow">’</strong>
+            <small>"</small>
+            , yes they're different.
+        </p>
+
+        <hr>
+
+        <h1>MANDATORY FANSONG PLUG</h1>
+          <p>it autoplays cause i need views. <small>this one's new so it actually serves a purpose yayay!!!</small><!-- <small>(thats a lie this one has like 40k) <small>(95k now holy shit dude)</small></small>--> but trust me it's peak okay</p>
+
+        <!-- originally 560 x 315 before vw conversion, 38.89vw new -->
+        <iframe id="yt-iframe" style="width: 560px; aspect-ratio: 16/9; margin: 0 auto; display: block;"
+            src="https://www.youtube.com/embed/76tKyi_IDlQ?si=3GJ-aVXEYmYMqwCL&amp;autoplay=1&amp;mute=1"
+            title="YouTube video player" frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+        <hr>
+
+        <footer>
+            <p>made by willow :3</p>
+            <p>
+                <a href="https://twitter.com/deItaprophecy" target="_blank">my twitter</a>
+                <small>■</small>
+                <a href="https://deltaprophecy.tumblr.com/" target="_blank">my tumblr</a>
+                <small>■</small>
+                <a href="https://www.reddit.com/user/deltaprophecy-legit/" target="_blank">my reddit</a>
+            </p>
+            <p>DELTARUNE © Toby Fox 2018-2026. All rights reserved. </p>
+        </footer>
+    </div>
+
+    <script>
+        (function () {
+
+            const req = indexedDB.open("_savedata.html");
+
+            req.onsuccess = function (e) {
+                const db = e.target.result;
+
+                const storeName = [...db.objectStoreNames][0];
+                const tx = db.transaction(storeName, "readwrite");
+                const store = tx.objectStore(storeName);
+
+                const key = "_savedata/gifexport.html";
+
+                const del = store.delete(key);
+
+                del.onsuccess = function () {
+                    console.log("Old GIF cleared from IndexedDB:", key);
+                };
+
+                del.onerror = function () {
+                    console.log("No previous GIF to delete (or already removed)");
+                };
+            };
+
+        })();
+
+        const iframe = document.getElementById("game");
+
+        iframe.addEventListener("load", () => {
+            const doc = iframe.contentWindow.document;
+
+            doc.documentElement.style.overflow = "hidden";
+            doc.body.style.overflow = "hidden";
+        });
+
+        function sendUpdate(dokill) {
+            console.log("sending", txt.value, yoff.value);
+            iframe.contentWindow.postMessage({
+                type: "updateInputs",
+                txt: document.getElementById("txt").value,
+                yoff: document.getElementById("yoff").value,
+                style: document.getElementById("style").value,
+                gifyoff: document.getElementById("gifyoff").value,
+                gifwidth: document.getElementById("gifwidth").value,
+                gifheight: document.getElementById("gifheight").value,
+                kill: dokill ? 1 : 0
+            }, "*");
+        }
+
+        document.getElementById("txt").addEventListener("input", () => sendUpdate(true));
+        document.getElementById("yoff").addEventListener("input", () => sendUpdate(false));
+        document.getElementById("style").addEventListener("change", () => sendUpdate(false));
+        document.getElementById("gifyoff").addEventListener("input", () => sendUpdate(false));
+        document.getElementById("gifwidth").addEventListener("input", () => sendUpdate(false));
+        document.getElementById("gifheight").addEventListener("input", () => sendUpdate(false));
+
+        iframe.addEventListener("load", () => sendUpdate(false));
+
+        document.getElementById("upload").onclick = async function () {
+            const input = document.createElement("input");
+            input.type = "file";
+            input.accept = "image/png";
+
+            input.onchange = async (e) => {
+                const file = e.target.files[0];
+                if (!file) return;
+
+                const reader = new FileReader();
+
+                reader.onload = function (ev) {
+                    iframe.contentWindow.postMessage({
+                        type: "uploadImage",
+                        name: file.name,
+                        data: ev.target.result
+                    }, "*");
+                };
+
+                reader.readAsDataURL(file);
+            };
+
+            input.click();
+        }
+
+        function apparentlyWeCantHaveMoreThanTwoLinesButWtv(input) {
+            const value = input.value;
+
+            const firstHashIndex = value.indexOf('#');
+
+            if (firstHashIndex !== -1) {
+                const beforeAndFirstHash = value.substring(0, firstHashIndex + 1);
+
+                const afterFirstHash = value.substring(firstHashIndex + 1).replace(/#/g, '');
+
+                input.value = beforeAndFirstHash + afterFirstHash;
+            }
+        }
+
+        window.addEventListener("message", function (e) {
+            if (!e.data) return;
+
+            if (e.data.type === "setInput") {
+                var input = document.getElementById(e.data.id);
+
+                if (input) {
+                    input.value = e.data.value;
+
+                    if (e.data.refresh) {
+                        sendUpdate(false);
+                    }
+                }
+            }
+        });
+
+        document.getElementById("download").onclick = function () {
+            iframe.contentWindow.postMessage({
+                type: "exportGif"
+            }, "*");
+        };
+
+        window.addEventListener("message", function (e) {
+            if (!e.data) return;
+
+            if (e.data.type === "downloadFile") {
+
+                const req = indexedDB.open("_savedata.html");
+
+                req.onsuccess = function (ev) {
+                    const db = ev.target.result;
+
+                    const storeName = [...db.objectStoreNames][0];
+                    const tx = db.transaction(storeName, "readonly");
+                    const store = tx.objectStore(storeName);
+
+                    const get = store.get("/_savedata/" + e.data.path);
+
+                    get.onsuccess = function (ge) {
+                        const val = ge.target.result;
+
+                        if (!val || !val.contents) {
+                            console.error("GIF not found in IndexedDB:", e.data.path);
+                            return;
+                        }
+
+                        console.log(
+                            "GIF contents type:",
+                            typeof val.contents,
+                            val.contents?.constructor?.name
+                        );
+
+                        const blob = new Blob([val.contents], { type: "image/gif" });
+                        const url = URL.createObjectURL(blob);
+
+                        const a = document.createElement("a");
+                        a.href = url;
+                        a.download = "dp-gifexport.html";
+
+                        document.body.appendChild(a);
+                        a.click();
+                        a.remove();
+
+                        URL.revokeObjectURL(url);
+                    };
+
+                    get.onerror = function () {
+                        console.error("Failed to read GIF from IndexedDB");
+                    };
+                };
+
+                req.onerror = function () {
+                    console.error("Failed to open IndexedDB /_savedata");
+                };
+            }
+        });
+    </script>
+
+</body>
+
+
+<!-- Mirrored from deltaprophecy.vercel.app/ by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 02 Oct 2026 21:01:20 GMT -->
+</html>

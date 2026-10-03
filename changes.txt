@@ -1,0 +1,279 @@
+DELTAPROPHECY STANDALONE EDITOR CHANGE HISTORY
+==============================================
+
+Scope
+-----
+The active implementation is index-noredirect.html plus the root assets
+directory. The deltaprophecy.vercel.app deployment snapshot was removed and
+is not part of this project.
+
+Iteration 0 - Re-scoping
+------------------------
+Old behavior:
+- The repair documents described a fetched GameMaker deployment that required
+  runner.wasm, runner.data, and game.unx.
+- The old standalone canvas page was treated as retired.
+
+Current behavior:
+- The standalone canvas page is the source of truth.
+- Its local assets, inline renderer, GIF worker, and direct download path are
+  the basis for all future repairs.
+
+Result:
+- Documentation and test scope migrated.
+
+Iteration 1 - Input and injection safety
+---------------------------------------
+Old behavior:
+- The text field was single-line.
+- User input was converted to markup and assigned with innerHTML.
+- Multiple line breaks and markup-containing text were unsafe.
+
+Current behavior:
+- The text field is a textarea with a 1000-character limit.
+- Newlines are rendered as explicit br elements and text nodes.
+- Markup is displayed literally and cannot create elements.
+
+Iteration 2 - Upload and object URL lifecycle
+---------------------------------------------
+Old behavior:
+- Uploads had no byte or dimension limits.
+- Decode failures were not visible.
+- Replaced object URLs were retained.
+
+Current behavior:
+- Image uploads are limited to 10 MB and 4096x4096 pixels.
+- Decode/type failures are reported in the status region.
+- Active image and texture URLs are revoked on replacement and pagehide.
+
+Iteration 3 - GIF export and external startup
+---------------------------------------------
+Old behavior:
+- gif.js was loaded twice.
+- Export could be attempted before a preview existed.
+- Export failures relied on alerts and large frame arrays were not cleared.
+- YouTube autoplayed on page load.
+
+Current behavior:
+- One local gif.js script is loaded.
+- The exact gif.js 0.2.0 encoder is now vendored at
+  assets/scripts/gif.js, avoiding the unavailable cdnjs request.
+- Export remains disabled until a renderable image is available.
+- Export state recovers on success, abort, timeout, or error, and frame
+  references are released.
+- YouTube is user-started and no longer requests autoplay.
+
+Iteration 4 - Client-side gate and accessibility feedback
+---------------------------------------------------------
+Old behavior:
+- A license fetch could redirect the editor to an external 404 page.
+- Upload and export errors were mostly console/alert-only.
+- The main text control lacked a descriptive label.
+
+Current behavior:
+- The external redirect gate is removed; the editor remains local.
+- The license file is no longer required for editor startup.
+- A persistent aria-live editor status reports upload/export failures.
+- The text control has a visible label and multiline help through its native
+  textarea behavior.
+
+Result:
+- Standalone static checks and inline JavaScript syntax checks pass.
+- The full browser checklist is recorded in TESTS.TXT and requires manual
+  interaction tests for file selection, GIF encoding, and narrow viewports.
+
+Iteration 5 - Alpha-aware opaque image compositing
+--------------------------------------------------
+Old behavior:
+- The uploaded image was treated as a silhouette only when average RGB
+  brightness exceeded 200.
+- Dark and colored opaque pixels were discarded.
+- Accepted pixels were forced to fully opaque texture.
+
+Current behavior:
+- Any pixel with source alpha above zero is accepted.
+- Source alpha is preserved in the textured output.
+- Black, colored, and translucent artwork now renders without changing the
+  existing canvas cadence.
+
+Iteration 6 - Simplified shell and newer visual treatment
+----------------------------------------------------------
+Old behavior:
+- The page included a redundant YouTube iframe and unrelated creator/font
+  credits.
+- Controls used flat black/white boxes and the page had no compact surface
+  grouping.
+
+Current behavior:
+- The video and redundant credits are removed.
+- The footer contains only DELTARUNE © 2018-2026 Toby Fox.
+- Controls use dark surfaces, muted text, yellow focus accents, responsive
+  wrapping, and grouped editor panels.
+- Existing advanced controls and renderer behavior remain available.
+
+Iteration 7 - Reference-aligned instructions and shell
+------------------------------------------------------
+- Removed the obsolete black-and-white/monochrome warning now that the
+  compositor accepts opaque pixels regardless of brightness or color.
+- Aligned the shell more closely with `styleinspo`: black background,
+  square borders, yellow action controls/headings, centered layout, and
+  portrait-friendly control sizing.
+
+Iteration 8 - The Girl style
+----------------------------
+- Removed the celebratory GIF-export message from the instructions.
+- Added The Girl as a final-style variant.
+- The Girl uses final red assets, hides the background texture layers, applies
+  a brighter panel overlay, and uses lighter red text without the blue
+  gradient transition.
+
+Iteration 9 - The Girl contrast and motion refinement
+-----------------------------------------------------
+- Increased Girl panel brightness to make pale pattern areas approach white.
+- Restored the original blue prophecy text texture and applied a lighter blue
+  treatment independently from the red panel layers.
+- Increased Girl diagonal afterframe movement from 2px at 2 rad/s to 5px at
+  3.5 rad/s; other styles remain unchanged.
+
+Iteration 10 - The Girl transition and panel color
+--------------------------------------------------
+- Kept The Final Prophecy's original 2-second transition and blue panel
+  treatment unchanged.
+- Scoped the longer 6-second transition and restrained warm hue/saturation
+  adjustment to The Girl's brighter red panel layers.
+
+Iteration 11 - The Girl white overlay
+-------------------------------------
+- Increased The Girl panel brightness from 2.1x to 4x so pale pattern areas
+  are lifted much more strongly toward white.
+- Final Prophecy timing, colors, and text rendering remain unchanged.
+
+Iteration 12 - Configurable GIF dimensions
+------------------------------------------
+- Added bounded GIF width and height controls under Advanced Settings.
+- Added a yellow labeled border around the preview showing the export size.
+- Captured frames are resized to the selected dimensions and gif.js receives
+  the same width and height values.
+
+Iteration 13 - Isolated GIF preview frame
+-----------------------------------------
+- Added a dedicated padded GIF preview container with a dimension-driven
+  aspect ratio and hidden overflow.
+- The border and renderer now stay within that frame, with spacing separating
+  it from controls and instructions.
+
+Iteration 14 - Styleinspo-aligned GIF preview frame
+--------------------------------------------------
+- Replaced resolution-dependent border fitting with a dedicated fixed
+  450×300 display frame, following the styleinspo canvas-wrapper approach.
+- Export width and height remain independently editable and are shown in the
+  frame label without changing the frame's layout footprint.
+
+Iteration 15 - Canvas/frame alignment
+-------------------------------------
+- Aligned the actual canvas stack to the padded GIF frame.
+- Removed legacy `top: -50px` offsets from panel and ghost canvases.
+- The frame now owns clipping and spacing while the canvases remain borderless
+  and contained, matching the styleinspo wrapper pattern.
+
+Iteration 16 - Background and GIF offset alignment
+--------------------------------------------------
+- Restored a native 2:1 canvas viewport inside the padded preview frame so
+  background and panel coordinates are not vertically stretched.
+- Moved the background origin to the center of the panel.
+- Applied GIF Panel Y Offset to background and panel layers together during
+  capture.
+
+Iteration 17 - Unified renderer geometry and large-image handling
+-----------------------------------------------------------------
+- Standardized preview and capture canvases on the default 450×300
+  composition space.
+- Added Check Rendering Alignment to validate canvas sizes, containment, and
+  aspect ratio after later control changes.
+- Kept large image mapping proportional through the alpha-mask fit path,
+  avoiding forced stretching of non-square uploads.
+
+Iteration 18 - Shared composition boundary
+-------------------------------------------
+- Moved both DOM text layers inside the GIF preview frame.
+- Positioned text at the same 20px origin used by GIF capture.
+- Made the canvas stack fill the same frame and changed the alignment check to
+  require exact frame/canvas coincidence.
+
+Iteration 19 - Unified preview and GIF layer origins
+----------------------------------------------------
+- Removed the legacy GIF-only canvas translation that shifted exported panels
+  relative to browser preview text and backgrounds.
+- Applied GIF Panel Y Offset while generating the shared panel/background
+  canvases so preview and capture use the same coordinates.
+- Added an independent Background Texture Scale control.
+
+Iteration 20 - Invertible alpha mask
+------------------------------------
+- Added an Invert Mask control.
+- The compositor now complements fitted source alpha values when enabled,
+  allowing transparent and opaque regions to swap roles in both preview and
+  GIF export.
+
+Iteration 21 - Image-height panel texture
+---------------------------------------
+- Added a pixel-based Panel Texture Width control.
+- Added a Custom Panel Texture Height checkbox and pixel control.
+- Kept fitted image height as the default texture height when the checkbox is
+  disabled.
+- Rendered the texture inside its own centered width/height rectangle so these
+  controls no longer resize or redefine the uploaded-image mask.
+- Changed the rectangle fill to native-size tiling so texture controls no longer
+  stretch the source pattern.
+
+Iteration 22 - Native texture tiling
+------------------------------------
+- Replaced stretched texture draws with repeated native-size texture tiles.
+- Texture width and height now control only the clipped fill area.
+
+Iteration 23 - Red-layer style isolation
+----------------------------------------
+- Suppressed red panel, ghost, background, and text layers outside Final
+  Prophecy and The Girl.
+- Prevented pulsing CSS opacity from leaking red overlays into default capture.
+
+Iteration 24 - Texture beyond image silhouette
+-----------------------------------------------
+- Changed panel compositing to union uploaded-image alpha with rendered
+  texture alpha.
+- Independently sized texture rectangles can now visibly extend beyond the
+  uploaded image without changing either source pattern.
+
+Iteration 25 - Restore mask-first compositing
+----------------------------------------------
+- Removed the experimental image/texture alpha union.
+- Restored uploaded-image alpha as the sole output mask to recover reliable
+  imported-image rendering.
+
+Iteration 26 - Reverted resolution-first texture surface
+---------------------------------------------------------
+- Reverted the offscreen resolution-first experiment.
+- Restored direct texture-rectangle scaling with stable uploaded-image alpha
+  masking.
+- Deferred overflow beyond the image silhouette until a separate visible layer
+  can be introduced safely.
+
+Iteration 27 - Separate texture overflow layers
+-----------------------------------------------
+- Reverted the duplicate overflow canvases after they caused texture movement
+  and resolution/scaling regressions.
+- Restored the stable single masked texture compositor.
+
+Current known external dependencies
+-----------------------------------
+- gif.js is loaded from cdnjs.
+- The local GIF worker is assets/scripts/gif.worker.js.
+- The page embeds a YouTube iframe.
+- The license check fetches assets/scripts/license.key and currently has an
+  external redirect failure path.
+
+Current validation limitation
+-----------------------------
+The old page can be statically checked and browser-tested independently of the
+missing GameMaker deployment. GIF export still requires gif.js to be available
+and the local worker/assets to be served by a local HTTP server.

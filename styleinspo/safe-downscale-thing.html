@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+
+
+<!-- Mirrored from deltaprophecy.vercel.app/safe-downscale-thing.html by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 02 Oct 2026 21:01:31 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=utf-8" /><!-- /Added by HTTrack -->
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>DELTAPROPHECY | IMAGE RESIZER</title>
+    <link rel="icon" type="image/png" href="assets/favicond41d.html?">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="tools.css">
+</head>
+
+<body>
+    <div class="centeralign" style="margin-top: 40px;">
+        <p style="margin-bottom: 0px;">DELTAPROPHECY</p>
+    </div>
+
+    <h1 style="margin-top: 10px; margin-bottom: 0px;">IMAGE RESIZER</h1>
+
+    <div class="centeralign" style="margin-top: 10px;">
+        <p style="margin-bottom: 20px;"><small>(i dont know what to call this)</small></p>
+    </div>
+
+    <input type="file" id="fileInput" accept="image/*" />
+    <label for="fileInput" class="custom-file-upload">Upload Image</label>
+
+    <canvas id="preview"></canvas>
+
+    <div id="statusText"></div>
+
+    <button id="exportButton">Export Image</button>
+
+    <div class="centeralign">
+        <hr>
+        <h1>INSTRUCTIONS</h1>
+        <p>
+            Upload your image. It scales it down to fit 150x88 pixels (The panel max dimensions.) I'd reccomend you run
+            your image through this first just to be safe, but it's not required.
+            <br>
+            Once you're done, you can export it using the... drumroll please...
+            <br>
+            ...
+            <br>
+            export button.
+        </p>
+        <hr>
+        <footer>
+            <p>made by willow :3</p>
+            <p>
+                <a href="https://twitter.com/deItaprophecy" target="_blank">my twitter</a>
+                <small>■</small>
+                <a href="https://deltaprophecy.tumblr.com/" target="_blank">my tumblr</a>
+                <small>■</small>
+                <a href="https://www.reddit.com/user/deltaprophecy-legit/" target="_blank">my reddit</a>
+            </p>
+            <p>DELTARUNE © Toby Fox 2018-2026. All rights reserved. </p>
+        </footer>
+    </div>
+
+    <script>
+        const fileInput = document.getElementById('fileInput');
+        const canvas = document.getElementById('preview');
+        const ctx = canvas.getContext('2d', { willReadFrequently: true });
+        const exportButton = document.getElementById('exportButton');
+        const MAX_WIDTH = 150;
+        const MAX_HEIGHT = 88;
+        fileInput.addEventListener('change', function () {
+            const file = fileInput.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const img = new Image();
+                img.onload = function () {
+                    processImage(img);
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        });
+        function processImage(img) {
+            const origWidth = img.width;
+            const origHeight = img.height;
+            let finalWidth = origWidth;
+            let finalHeight = origHeight;
+            let scaled = false;
+            let scale = 1;
+            if (origWidth > MAX_WIDTH || origHeight > MAX_HEIGHT) {
+                scale = Math.min(MAX_WIDTH / origWidth, MAX_HEIGHT / origHeight);
+                finalWidth = Math.max(1, Math.round(origWidth * scale));
+                finalHeight = Math.max(1, Math.round(origHeight * scale));
+                scaled = true;
+            }
+
+            const tempCanvas = document.createElement('canvas');
+            tempCanvas.width = origWidth;
+            tempCanvas.height = origHeight;
+            const tempCtx = tempCanvas.getContext('2d');
+            tempCtx.drawImage(img, 0, 0);
+            const origData = tempCtx.getImageData(0, 0, origWidth, origHeight);
+            const origPixels = origData.data;
+
+            canvas.width = finalWidth;
+            canvas.height = finalHeight;
+            const newImageData = ctx.createImageData(finalWidth, finalHeight);
+            const newPixels = newImageData.data;
+            const invScale = 1 / scale;
+
+            for (let y = 0; y < finalHeight; y++) {
+                for (let x = 0; x < finalWidth; x++) {
+                    const origX = Math.floor(x * invScale);
+                    const origY = Math.floor(y * invScale);
+                    const origIdx = (origY * origWidth + origX) * 4;
+                    const newIdx = (y * finalWidth + x) * 4;
+                    newPixels[newIdx] = origPixels[origIdx];
+                    newPixels[newIdx + 1] = origPixels[origIdx + 1];
+                    newPixels[newIdx + 2] = origPixels[origIdx + 2];
+                    newPixels[newIdx + 3] = origPixels[origIdx + 3] > 127 ? 255 : 0;
+                }
+            }
+
+            ctx.putImageData(newImageData, 0, 0);
+        }
+        exportButton.addEventListener('click', function () {
+            const link = document.createElement('a');
+            link.download = 'dp-downscale.html';
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        });
+    </script>
+</body>
+
+
+<!-- Mirrored from deltaprophecy.vercel.app/safe-downscale-thing.html by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 02 Oct 2026 21:01:31 GMT -->
+</html>

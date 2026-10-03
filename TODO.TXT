@@ -1,0 +1,77 @@
+DELTAPROPHECY STANDALONE EDITOR TODO
+====================================
+
+Scope
+-----
+Work only on index-noredirect.html and its local assets. Preserve rendering
+cadence and visual behavior unless a focused acceptance test requires change.
+
+Repair iterations
+-----------------
+[x] 1. Replace text innerHTML with safe text rendering.
+[x] 2. Add textarea input and multiple-newline support.
+[x] 3. Remove duplicate gif.js loading and choose local/CDN strategy.
+[x] 4. Add upload type, byte, dimension, and decode-error validation.
+[x] 5. Track and revoke upload object URLs.
+[x] 6. Add export readiness, status, cleanup, and failure recovery.
+[x] 7. Remove external license redirects and show local diagnostics.
+[x] 8. Defer YouTube autoplay and optional third-party startup.
+[x] 9. Improve labels, field grouping, status announcements, and mobile
+    wrapping.
+[x] 10. Release redundant image/canvas references after replacement.
+[x] 11. Run TESTS.TXT and update BUGS.TXT only for evidenced fixes.
+[x] 12. Switch image compositing from brightness silhouettes to alpha-aware
+    opaque-pixel handling.
+[x] 13. Remove redundant video/credits and retain only the Toby Fox notice.
+[x] 14. Apply the newer compact dark-panel visual treatment without removing
+    editor features.
+[x] 15. Remove obsolete black-and-white guidance and align the shell with the
+    concrete styleinspo reference.
+[x] 16. Add The Girl style using the final red assets with brighter panel
+    compositing, lighter red text, and no background texture.
+[x] 17. Keep The Girl text on the original blue prophecy texture and widen
+    and accelerate its diagonal afterframe movement.
+[x] 18. Keep The Final Prophecy unchanged while lengthening The Girl's panel
+    transition and warming its brighter red treatment.
+[x] 19. Increase The Girl's panel white overlay substantially without changing
+    Final Prophecy or the text treatment.
+[x] 20. Add modifiable GIF width/height controls and a labeled output border
+    that reflects the exported dimensions.
+[x] 21. Isolate the GIF preview border in a padded, bounded container so it
+    cannot overlap surrounding page content.
+[x] 22. Use a dedicated fixed 450×300 preview frame, following the
+    styleinspo canvas-wrapper pattern while keeping export dimensions editable.
+[x] 23. Align the actual canvases with the padded GIF frame and remove legacy
+    vertical offsets that caused clipping and dark overlap.
+[x] 24. Restore the native canvas coordinate space, center the background on
+    the panel, and apply GIF Y offset consistently during capture.
+[x] 25. Consolidate renderer dimensions and add a user-facing alignment check.
+[x] 26. Preserve aspect ratios for large non-square transparent uploads.
+[x] 27. Put text and canvas layers in one shared composition frame so the
+    visible border matches the complete rendered output.
+[x] 28. Unify browser and GIF layer origins by removing the legacy capture-only
+    canvas translation and applying GIF Panel Y Offset before both paths render.
+[x] 29. Add an independent background texture scale control.
+[x] 30. Add an invert-mask control that complements source alpha values while
+     preserving the normal alpha-aware behavior when disabled.
+[x] 31. Render panel texture width and optional height in an independent
+     centered rectangle, without changing uploaded-image dimensions.
+[x] 32. Fill the independent texture rectangle with native-size repeated tiles
+     instead of stretching one texture image to the rectangle.
+[x] 33. Explicitly suppress red layers outside Final Prophecy and The Girl.
+[x] 34. Revert the resolution-first texture surface experiment.
+[x] 35. Restore direct texture-rectangle scaling with stable image alpha
+     masking.
+[ ] 36. Design a separate overflow layer if texture beyond the silhouette is
+     required again.
+[x] 37. Revert the duplicate overflow-layer experiment after its coordinate
+     and resolution behavior diverged from the stable compositor.
+
+Iteration protocol
+------------------
+1. Read the relevant renderer and asset paths.
+2. Make the smallest boundary change.
+3. Run tests/static-checks.mjs.
+4. Run the focused browser acceptance test.
+5. Run the TESTS.TXT regression checklist.
+6. Record old/current behavior in changes.txt.

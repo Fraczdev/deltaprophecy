@@ -1,0 +1,179 @@
+DELTAPROPHECY STANDALONE EDITOR REVIEW
+======================================
+
+Scope
+-----
+The source of truth is index-noredirect.html and the local assets directory.
+The deltaprophecy.vercel.app deployment snapshot is not part of this project
+and is intentionally excluded from the repair plan.
+
+Architecture
+------------
+index-noredirect.html is a single-page canvas application:
+
+1. The page loads local fonts, panel textures, depth/background textures, the
+   local GIF worker, and gif.js from cdnjs.
+2. The user selects a panel preset or uploads a panel/background/text texture,
+   enters text, and adjusts offsets, scale, style, GIF dimensions, and
+   animation settings.
+3. Inline JavaScript draws multiple 450x300 canvas layers for the panel, text,
+   ghosts, background, and red/final variants. Preview and GIF capture share
+   this composition geometry.
+4. requestAnimationFrame drives the animated preview. A separate interval
+   updates the scrolling texture state.
+5. GIF export captures 300 frames at 16 ms intervals and sends them to gif.js,
+   which uses assets/scripts/gif.worker.js to encode a downloadable GIF.
+6. A client-side license.key fetch can redirect to an external 404 page when
+   the expected local file is absent or differs.
+
+Local resources
+---------------
+Required local resources:
+- assets/base-panels/*.png
+- assets/depth/*.png
+- assets/fonts/PROPHECYTYPE.ttf
+- assets/fonts/DTM-Sans.otf
+- assets/scripts/gif.worker.js
+- assets/favicon.png
+
+External resources:
+- GIF encoding is now vendored locally as assets/scripts/gif.js.
+- A YouTube iframe is embedded with autoplay and mute enabled.
+- The former client-side license redirect has been removed.
+
+Input and rendering behavior
+----------------------------
+- The text control is currently a single-line input.
+- Text is rendered into two visual containers as text nodes with explicit
+  line breaks, so user markup is not interpreted.
+- Canvas dimensions and animation cadence are fixed by the existing renderer;
+  FPS/timing should not be changed as part of safety or comfort fixes.
+- Panel and background uploads create object URLs, but their lifecycle is not
+  consistently revoked after image decoding.
+- Font uploads use FileReader data URLs and FontFace.
+- Texture uploads use object URLs and redraw the preview.
+
+GIF export behavior
+-------------------
+- Export creates a GIF encoder with 16 workers and quality 15.
+- It captures 300 frames, waits 16 ms between captures, then renders.
+- The export button is disabled while the operation is active.
+- A 90-second timeout resets the UI.
+- Finished output is downloaded as output.gif.
+- GIF capture leaves pixels outside the rendered layers transparent and passes
+  a transparent color to gif.js instead of painting a black base into every
+  frame.
+- The Export with black background option restores the original solid-black
+  export behavior by filling each capture frame and disabling GIF transparency.
+- Experimental Optimized GIF captures 150 frames at 32 ms with four workers
+  and quality 10, preserving the normal export duration while reducing frame
+  count and encoder workload. It is intentionally separate from the normal
+  export path.
+- Large frame arrays and encoder workers can create high memory pressure.
+- Error reporting uses console output and alert dialogs.
+- A Check Rendering Alignment control validates canvas dimensions, wrapper
+  containment, and the preview aspect ratio after layout changes.
+
+Rendering geometry
+------------------
+The editor uses a single 450x300 composition space, matching the default GIF
+size. The preview owns a padded frame and clips a borderless canvas stack
+inside it, following the wrapper/canvas separation used by the styleinspo
+reference. Export dimensions remain configurable and resize the captured
+composition only at the final export step.
+
+The GIF capture path draws the same 450x300 canvases used by the browser at
+their native origin. It must not add a second canvas translation. GIF Panel
+Y Offset is applied when those canvases are generated, while text remains at
+the shared 20px origin. Background Texture Scale is independent from panel
+image scale and is applied before the background canvas is shared by both
+paths.
+
+Uploaded images are fitted proportionally into the 256px panel mask using
+their alpha channel. Large transparent, non-square images therefore retain
+their shape; an image with an opaque rectangular background will correctly
+remain rectangular because its alpha channel contains a rectangle.
+
+Opaque image handling
+---------------------
+The compositor uses the uploaded image's alpha channel as its mask. Every
+pixel with alpha above zero receives the scrolling texture, with the source
+alpha preserved. Pixel brightness is not used as a gate, so dark, colored,
+and translucent opaque artwork is supported rather than only white silhouettes.
+
+Visual shell
+------------
+The editor uses a compact dark control-panel layout with rounded surfaces,
+muted secondary text, responsive wrapping, and a purple focus accent. The
+canvas renderer and advanced controls remain available.
+
+Confirmed issues and solutions
+------------------------------
+1. Text injection through innerHTML.
+   Normalize line breaks, create text nodes or use textContent, and preserve
+   the intended visual line breaks without interpreting user markup.
+
+2. Text input supports only one line.
+   Replace the input with a textarea and normalize CRLF/LF to the renderer's
+   line-break representation. Preserve multiple newlines.
+
+3. gif.js was loaded twice and depended on a CDN.
+   The exact compatible 0.2.0 encoder is now vendored locally. Do not change
+   GIF timing during migration.
+
+4. Upload validation is incomplete.
+   Enforce file byte limits, decoded dimension limits, supported MIME types,
+   and visible decode errors before allocating large canvases.
+
+5. Object URLs are not consistently revoked.
+   Track each temporary URL and revoke it after image decode or replacement.
+   Revoke old URLs before assigning a new upload.
+
+6. Export memory use is high and failures are disruptive.
+   Keep the current frame count and delay unless behavior requires otherwise,
+   but add state cleanup, cancellation-safe reset, and visible status. Ensure
+   worker/Blob resources are released after completion or failure.
+
+7. Export can be attempted without a valid processed image.
+   Disable export until required assets and a renderable preview exist.
+
+8. License fetch is a brittle client-side gate.
+   Treat a missing license file as a visible local error rather than redirecting
+   to an unrelated external page. Client-side checks cannot provide licensing
+   security.
+
+9. Autoplay and third-party requests occur on first load.
+   Make the video user-started and remove unnecessary autoplay permission.
+   Do not let optional media block editor startup.
+
+10. Accessibility and responsive grouping are incomplete.
+    Add labels/fieldset grouping, an aria-live status region, keyboard-visible
+    controls, responsive wrapping, and clearer instruction spacing.
+
+11. Uploads can create redundant decoded copies.
+    Keep the existing rendering algorithms but avoid retaining obsolete image,
+    canvas, and data-URL copies after replacement.
+
+12. Tooling has no source-level regression check for this implementation.
+    Check the standalone HTML, all local resources, expected safe-rendering
+    patterns, and GIF worker availability before browser testing.
+
+Non-goals
+---------
+- Do not restore or analyze the missing GameMaker deployment as the active
+  implementation.
+- Do not modify FPS, Hz, frame delay, or visual cadence unless a focused test
+  proves a bug requires it.
+- Do not treat client-side license logic as a security boundary.
+Texture overflow status
+-----------------------
+The active renderer intentionally keeps the uploaded-image alpha mask as the
+panel boundary. Texture outside that silhouette is deferred. A duplicate
+overflow canvas was tested and reverted because it stopped matching the
+animated texture phase and introduced severe resolution/scaling distortion.
+Do not reintroduce an overflow layer without sharing the stable renderer's
+coordinate transform and animation phase in both preview and GIF capture.
+For the current workflow, the warning below the instructions recommends
+adding invisible bottom space for vertical extension and invisible side space
+for horizontal extension. This preserves the visible image while giving the
+texture room to be centered manually.
