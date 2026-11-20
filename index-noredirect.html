@@ -1375,21 +1375,47 @@
       const texData = tempCtx.getImageData(0, 0, canvasSize, canvasSize);
       const result = tempCtx.createImageData(canvasSize, canvasSize);
 
-      for (let i = 0; i < maskData.data.length; i += 4) {
-        const sourceAlpha = maskData.data[i + 3];
-        const maskAlpha = invertMask.checked ? 255 - sourceAlpha : sourceAlpha;
-        const a = maskAlpha;
+      
 
-        if (a > 0) {
-          result.data[i] = texData.data[i];
-          result.data[i + 1] = texData.data[i + 1];
-          result.data[i + 2] = texData.data[i + 2];
-          result.data[i + 3] = a;
-        } else {
-          result.data[i + 3] = 0;
-        }
-      }
+const threshold = 245;
+const feather = 25;
 
+for (let i = 0; i < maskData.data.length; i += 4) {
+  const r = maskData.data[i];
+  const g = maskData.data[i + 1];
+  const b = maskData.data[i + 2];
+  const sourceAlpha = maskData.data[i + 3];
+
+
+  const brightness =
+    0.299 * r +
+    0.587 * g +
+    0.114 * b;
+
+
+  let mask = Math.max(
+    0,
+    Math.min(1, (threshold - brightness) / feather)
+  );
+
+  
+  mask = mask * mask * (3 - 2 * mask);
+
+  let a = Math.round(mask * sourceAlpha);
+
+  if (invertMask.checked) {
+    a = 255 - a;
+  }
+
+  if (a > 0) {
+    result.data[i] = texData.data[i];
+    result.data[i + 1] = texData.data[i + 1];
+    result.data[i + 2] = texData.data[i + 2];
+    result.data[i + 3] = a;
+  } else {
+    result.data[i + 3] = 0;
+  }
+}
       const resultCanvas = document.createElement('canvas');
       resultCanvas.width = resultCanvas.height = canvasSize;
       resultCanvas.getContext('2d').putImageData(result, 0, 0);
